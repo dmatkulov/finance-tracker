@@ -1,7 +1,10 @@
 import React from 'react';
 import {Link, NavLink} from 'react-router-dom';
+import {useAppDispatch} from '../../app/hooks';
+import {showAddTransactionModal} from '../../store/transaction/transactionSlice';
 
 const Navbar: React.FC = () => {
+  const dispatch = useAppDispatch();
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-sm">
@@ -15,6 +18,7 @@ const Navbar: React.FC = () => {
           <li className="nav-item">
             <button
               className="nav-link"
+              onClick={() => dispatch(showAddTransactionModal(true))}
             >
               Add
             </button>

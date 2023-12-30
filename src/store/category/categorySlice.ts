@@ -11,8 +11,8 @@ interface CategoryState {
   fetchOneLoading: boolean;
   updateLoading: boolean;
   deleteLoading: false | string;
-  show: boolean;
-  showEdit: boolean;
+  showAddModal: boolean;
+  showEditModal: boolean;
 }
 
 const initialState: CategoryState = {
@@ -23,8 +23,8 @@ const initialState: CategoryState = {
   fetchOneLoading: false,
   updateLoading: false,
   deleteLoading: false,
-  show: false,
-  showEdit: false
+  showAddModal: false,
+  showEditModal: false
 };
 
 export const categorySlice = createSlice({
@@ -32,10 +32,10 @@ export const categorySlice = createSlice({
   initialState,
   reducers: {
     showAddCategoryModal: (state, action: PayloadAction<boolean>) => {
-      state.show = action.payload;
+      state.showAddModal = action.payload;
     },
     showEditCategoryModal: (state, action: PayloadAction<boolean>) => {
-      state.showEdit = action.payload;
+      state.showEditModal = action.payload;
     }
   },
   extraReducers: builder => {
@@ -91,8 +91,8 @@ export const {
 
 export const selectCategories = (state: RootState) => state.categories.categories;
 export const selectCategory = (state: RootState) => state.categories.category;
-export const selectAddCategoryModal = (state: RootState) => state.categories.show;
-export const selectEditCategoryModal = (state: RootState) => state.categories.showEdit;
+export const selectAddCategoryModal = (state: RootState) => state.categories.showAddModal;
+export const selectEditCategoryModal = (state: RootState) => state.categories.showEditModal;
 export const selectCreateLoading = (state: RootState) => state.categories.createLoading;
 export const selectFetchLoading = (state: RootState) => state.categories.fetchLoading;
 export const selectFetchOneLoading = (state: RootState) => state.categories.fetchOneLoading;

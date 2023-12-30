@@ -1,26 +1,34 @@
 import {CategoryMutation, Transaction} from '../../types';
-import {createSlice} from '@reduxjs/toolkit';
-import {createTransaction, fetchCategoryPreview} from './transactionThunks';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createTransaction, fetchAllTransactions, fetchCategoryPreview} from './transactionThunks';
 import {RootState} from '../../app/store';
 
 interface TransactionState {
   transactions: Transaction[];
   categoryPreview: CategoryMutation[];
-  fetchPreviewLoading: boolean;
   createLoading: boolean;
+  fetchLoading: boolean;
+  fetchPreviewLoading: boolean;
+  showAddTransactionModal: boolean;
 }
 
 const initialState: TransactionState = {
   transactions: [],
   categoryPreview: [],
-  fetchPreviewLoading: false,
   createLoading: false,
+  fetchLoading: false,
+  fetchPreviewLoading: false,
+  showAddTransactionModal: false,
 };
 
 export const transactionSlice = createSlice({
   name: 'transaction',
   initialState,
-  reducers: {},
+  reducers: {
+    showAddTransactionModal: (state, action: PayloadAction<boolean>) => {
+      state.showAddTransactionModal = action.payload;
+    },
+  },
   extraReducers: builder => {
     builder.addCase(createTransaction.pending, (state) => {
       state.createLoading = true;
@@ -42,6 +50,17 @@ export const transactionSlice = createSlice({
     builder.addCase(fetchCategoryPreview.rejected, (state) => {
       state.fetchPreviewLoading = false;
     });
+    
+    builder.addCase(fetchAllTransactions.pending, (state) => {
+      state.fetchLoading = true;
+    });
+    builder.addCase(fetchAllTransactions.fulfilled, (state, {payload: transactions}) => {
+      state.fetchLoading = false;
+      state.transactions = transactions;
+    });
+    builder.addCase(fetchAllTransactions.rejected, (state) => {
+      state.fetchLoading = false;
+    });
   }
 });
 
@@ -49,9 +68,13 @@ export const transactionSlice = createSlice({
 export const transactionReducer = transactionSlice.reducer;
 
 export const {
-
+  showAddTransactionModal,
 } = transactionSlice.actions;
 
+
+export const selectTransactions = (state: RootState) => state.transaction.transactions;
 export const selectCategoryPreview = (state: RootState) => state.transaction.categoryPreview;
+export const selectFetchTransactionsLoading = (state: RootState) => state.transaction.fetchLoading;
 export const selectPreviewLoading = (state: RootState) => state.transaction.fetchPreviewLoading;
 export const selectCreateTransactionLoading = (state: RootState) => state.transaction.createLoading;
+export const selectShowTransaction = (state: RootState) => state.transaction.showAddTransactionModal;

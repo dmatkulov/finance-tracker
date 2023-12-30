@@ -5,6 +5,7 @@ import {selectCategoryPreview} from '../../store/transaction/transactionSlice';
 import {ApiTransaction, TransactionMutate} from '../../types';
 import {selectCategories} from '../../store/category/categorySlice';
 import {fetchAllCategories} from '../../store/category/categoryThunks';
+import ButtonSpinner from '../Spinner/ButtonSpinner';
 
 const initialState: TransactionMutate = {
   type: '',
@@ -19,7 +20,7 @@ interface Props {
   isLoading?: boolean;
 }
 
-const TransactionForm: React.FC<Props> = ({onSubmitTransaction, existingCategory = initialState}) => {
+const TransactionForm: React.FC<Props> = ({onSubmitTransaction, existingCategory = initialState, isEdit = false, isLoading= false}) => {
   const dispatch = useAppDispatch();
   const categoryPreviews = useAppSelector(selectCategoryPreview);
   const categories = useAppSelector(selectCategories);
@@ -61,11 +62,10 @@ const TransactionForm: React.FC<Props> = ({onSubmitTransaction, existingCategory
     }
   };
   
-  
   return (
     <form onSubmit={onFormSubmit}>
       <h4 className="mb-3">
-        Create new Transaction
+        {isEdit ? 'Edit category' : 'Create new Transaction'}
       </h4>
       <div className="form-group mb-3">
         <label htmlFor="type" className="text-secondary mb-2">Category type</label>
@@ -121,8 +121,10 @@ const TransactionForm: React.FC<Props> = ({onSubmitTransaction, existingCategory
       <button
         type="submit"
         className="btn btn-success w-100"
+        disabled={isLoading}
       >
-        Create
+        {isLoading && <ButtonSpinner/>}
+        {isEdit ? 'Save' : 'Create'}
       </button>
     </form>
   );

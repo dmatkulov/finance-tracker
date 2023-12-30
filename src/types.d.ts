@@ -21,6 +21,7 @@ export interface ApiTransaction {
 export interface Transaction extends ApiTransaction{
   id: string;
   amount: number;
+  type: string;
 }
 
 export interface ApiTransactions {
