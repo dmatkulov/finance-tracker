@@ -40,14 +40,15 @@ const CategoryForm: React.FC<Props> = ({onSubmitCategory, existingCategory = ini
       <div className="form-group mb-3">
         <label htmlFor="type" className="text-secondary mb-2">Category type</label>
         <select
+          required
           name="type"
           id="type"
           className="form-select"
           value={category.type}
           onChange={changeCategory}
-          required
         >
-          <option defaultValue="income">Income</option>
+          <option disabled value="">Select a category</option>
+          <option value="income">Income</option>
           <option value="expense">Expense</option>
         </select>
       </div>

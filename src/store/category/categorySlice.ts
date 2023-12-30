@@ -45,7 +45,7 @@ export const categorySlice = createSlice({
     });
     builder.addCase(fetchAllCategories.fulfilled, (state, {payload: categories}) => {
       state.fetchLoading = false;
-      state.categories = categories;
+      state.categories = categories.reverse();
     });
     builder.addCase(fetchAllCategories.rejected, (state) => {
       state.fetchLoading = false;
