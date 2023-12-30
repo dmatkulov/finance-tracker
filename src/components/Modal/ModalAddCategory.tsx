@@ -1,18 +1,18 @@
 import React, {PropsWithChildren} from 'react';
 import Backdrop from '../Backdrop/Backdrop';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {selectCategoryModal, showCategoryModal} from '../../store/category/categorySlice';
+import {selectAddCategoryModal, showAddCategoryModal} from '../../store/category/categorySlice';
 
-const Modal: React.FC<PropsWithChildren> = ({children}) => {
+const ModalAddCategory: React.FC<PropsWithChildren> = ({children}) => {
   const dispatch = useAppDispatch();
-  const show = useAppSelector(selectCategoryModal);
+  const show = useAppSelector(selectAddCategoryModal);
   
   const onInnerClick = (event: React.MouseEvent) => {
     event.stopPropagation();
   };
   
   const onClose = () => {
-    dispatch(showCategoryModal(false));
+    dispatch(showAddCategoryModal(false));
   };
   
   return show && (
@@ -34,4 +34,4 @@ const Modal: React.FC<PropsWithChildren> = ({children}) => {
   );
 };
 
-export default Modal;
+export default ModalAddCategory;

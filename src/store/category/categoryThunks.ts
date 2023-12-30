@@ -31,6 +31,35 @@ export const fetchAllCategories = createAsyncThunk<Category[], undefined>(
   }
 );
 
+export const fetchOneCategory = createAsyncThunk<Category, string>(
+  'categories/fetchOne',
+  async (id) => {
+    const response = await axiosApi.get<ApiCategory | null>('/categories/' + id + '.json');
+    const category = response.data;
+    
+    if (category === null) {
+      throw new Error('Item not found');
+    }
+    const oneCategory: Category = {
+      id,
+      ...category
+    };
+    return oneCategory;
+  }
+);
+
+interface UpdateContactParams {
+  id: string;
+  category: ApiCategory;
+}
+
+export const updateCategory = createAsyncThunk<void, UpdateContactParams>(
+  'category/update',
+  async ({id, category}) => {
+    await axiosApi.put('/categories/' + id + '.json', category);
+  }
+);
+
 export const deleteCategory = createAsyncThunk<void, string>(
   'category/delete',
   async (id: string) => {

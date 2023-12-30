@@ -1,32 +1,41 @@
 import {Category} from '../../types';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../../app/store';
-import {createCategory, deleteCategory, fetchAllCategories} from './categoryThunks';
+import {createCategory, deleteCategory, fetchAllCategories, fetchOneCategory} from './categoryThunks';
 
 interface CategoryState {
   categories: Category[];
+  category: Category | null;
   createLoading: boolean;
   fetchLoading: boolean;
+  fetchOneLoading: boolean;
   updateLoading: boolean;
   deleteLoading: false | string;
   show: boolean;
+  showEdit: boolean;
 }
 
 const initialState: CategoryState = {
   categories: [],
+  category: null,
   createLoading: false,
   fetchLoading: false,
+  fetchOneLoading: false,
   updateLoading: false,
   deleteLoading: false,
   show: false,
+  showEdit: false
 };
 
 export const categorySlice = createSlice({
   name: 'category',
   initialState,
   reducers: {
-    showCategoryModal: (state, action: PayloadAction<boolean>) => {
+    showAddCategoryModal: (state, action: PayloadAction<boolean>) => {
       state.show = action.payload;
+    },
+    showEditCategoryModal: (state, action: PayloadAction<boolean>) => {
+      state.showEdit = action.payload;
     }
   },
   extraReducers: builder => {
@@ -51,6 +60,17 @@ export const categorySlice = createSlice({
       state.fetchLoading = false;
     });
     
+    builder.addCase(fetchOneCategory.pending, (state) => {
+      state.fetchOneLoading = true;
+    });
+    builder.addCase(fetchOneCategory.fulfilled, (state,{payload: category}) => {
+      state.fetchOneLoading = false;
+      state.category = category;
+    });
+    builder.addCase(fetchOneCategory.rejected, (state) => {
+      state.fetchOneLoading = false;
+    });
+    
     builder.addCase(deleteCategory.pending, (state, {meta}) => {
       state.deleteLoading = meta.arg;
     });
@@ -65,12 +85,16 @@ export const categorySlice = createSlice({
 
 export const categoryReducer = categorySlice.reducer;
 export const {
-  showCategoryModal,
+  showAddCategoryModal,
+  showEditCategoryModal
 } = categorySlice.actions;
 
 export const selectCategories = (state: RootState) => state.categories.categories;
-export const selectCategoryModal = (state: RootState) => state.categories.show;
+export const selectCategory = (state: RootState) => state.categories.category;
+export const selectAddCategoryModal = (state: RootState) => state.categories.show;
+export const selectEditCategoryModal = (state: RootState) => state.categories.showEdit;
 export const selectCreateLoading = (state: RootState) => state.categories.createLoading;
 export const selectFetchLoading = (state: RootState) => state.categories.fetchLoading;
+export const selectFetchOneLoading = (state: RootState) => state.categories.fetchOneLoading;
 export const selectUpdateLoading = (state: RootState) => state.categories.updateLoading;
 export const selectDeleteLoading = (state: RootState) => state.categories.deleteLoading;

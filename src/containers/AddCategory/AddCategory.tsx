@@ -1,9 +1,9 @@
 import React from 'react';
-import {useAppDispatch, useAppSelector} from '../../../app/hooks';
-import {selectCreateLoading} from '../../../store/category/categorySlice';
-import CategoryForm from '../../../components/CategoryForm/CategoryForm';
-import {ApiCategory} from '../../../types';
-import {createCategory, fetchAllCategories} from '../../../store/category/categoryThunks';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {selectCreateLoading} from '../../store/category/categorySlice';
+import CategoryForm from '../../components/CategoryForm/CategoryForm';
+import {ApiCategory} from '../../types';
+import {createCategory, fetchAllCategories} from '../../store/category/categoryThunks';
 
 const AddCategory: React.FC = () => {
   const dispatch = useAppDispatch();
