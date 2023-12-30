@@ -2,6 +2,9 @@ import React from 'react';
 import {Transaction} from '../../types';
 import dayjs from 'dayjs';
 import ButtonSpinner from '../Spinner/ButtonSpinner';
+import {useAppDispatch} from '../../app/hooks';
+import {showEditTransactionModal} from '../../store/transaction/transactionSlice';
+import {fetchOneTransaction} from '../../store/transaction/transactionThunks';
 
 interface Props {
   transaction: Transaction;
@@ -10,6 +13,7 @@ interface Props {
 }
 
 const TransactionItem: React.FC<Props> = ({transaction, deleteLoading, onDelete}) => {
+  const dispatch = useAppDispatch();
   const createdAt = transaction.createdAt;
   
   const amountStyle = ['fw-bold'];
@@ -19,6 +23,11 @@ const TransactionItem: React.FC<Props> = ({transaction, deleteLoading, onDelete}
   } else {
     amountStyle.push('text-danger');
   }
+  
+  const fetchTransaction = async (id: string) => {
+    dispatch(showEditTransactionModal(true));
+    await dispatch(fetchOneTransaction(id));
+  };
   
   return (
     <div className="card mb-3">
@@ -30,11 +39,13 @@ const TransactionItem: React.FC<Props> = ({transaction, deleteLoading, onDelete}
           <h5 className="card-title">{transaction.category}</h5>
         </div>
         <div className="col-2">
-          <span className={amountStyle.join(' ')}>{transaction.type === 'income' ? `+ ${transaction.amount}` : `- ${transaction.amount}`}</span>
+          <span
+            className={amountStyle.join(' ')}>{transaction.type === 'income' ? `+ ${transaction.amount}` : `- ${transaction.amount}`}</span>
         </div>
         <div className="col-2 d-flex gap-3 align-items-center justify-content-end">
           <button
             className="btn btn-outline-secondary d-flex align-items-center justify-content-center p-3"
+            onClick={() => fetchTransaction(transaction.id)}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  className="bi bi-pencil-square" viewBox="0 0 16 16">

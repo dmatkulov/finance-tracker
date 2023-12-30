@@ -29,7 +29,7 @@ export interface ApiTransactions {
 }
 
 export interface TransactionMutate {
-  type: '',
-  name: '',
+  type: string,
+  name: string,
   amount: string;
 }

@@ -1,9 +1,11 @@
 import React, {useEffect} from 'react';
 import TransactionItem from './TransactionItem';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {selectDeleteTransaction, selectTransactions} from '../../store/transaction/transactionSlice';
+import {selectDeleteTransaction, selectTransaction, selectTransactions} from '../../store/transaction/transactionSlice';
 import {selectCategories} from '../../store/category/categorySlice';
 import {deleteTransaction, fetchAllTransactions} from '../../store/transaction/transactionThunks';
+import ModalEditTransaction from '../Modal/ModalEditTransaction';
+import EditTransaction from '../../containers/EditTransaction/EditTransaction';
 
 
 const TransactionList: React.FC = () => {
@@ -11,6 +13,7 @@ const TransactionList: React.FC = () => {
   const categories = useAppSelector(selectCategories);
   const transactions = useAppSelector(selectTransactions);
   const deleteLoading = useAppSelector(selectDeleteTransaction);
+  const oneTransaction = useAppSelector(selectTransaction);
   
   useEffect(() => {
     if (categories.length > 0) {
@@ -29,7 +32,7 @@ const TransactionList: React.FC = () => {
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
   
-  let total = transactions.reduce((acc, transaction) => {
+  const total = transactions.reduce((acc, transaction) => {
     if (transaction.type === 'income') {
       return acc + transaction.amount;
     } else {
@@ -52,6 +55,13 @@ const TransactionList: React.FC = () => {
           onDelete={() => onDeleteTransaction(transaction.id)}
         />
       ))}
+      <ModalEditTransaction>
+        {oneTransaction &&
+          <EditTransaction
+            transaction={oneTransaction}
+          />
+        }
+      </ModalEditTransaction>
     </div>
   );
 };

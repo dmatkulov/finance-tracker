@@ -15,16 +15,16 @@ const initialState: TransactionMutate = {
 
 interface Props {
   onSubmitTransaction: (category: ApiTransaction) => void;
-  existingCategory?: TransactionMutate;
+  existingTransaction?: TransactionMutate;
   isEdit?: boolean;
   isLoading?: boolean;
 }
 
-const TransactionForm: React.FC<Props> = ({onSubmitTransaction, existingCategory = initialState, isEdit = false, isLoading= false}) => {
+const TransactionForm: React.FC<Props> = ({onSubmitTransaction, existingTransaction = initialState, isEdit = false, isLoading= false}) => {
   const dispatch = useAppDispatch();
   const categoryPreviews = useAppSelector(selectCategoryPreview);
   const categories = useAppSelector(selectCategories);
-  const [selectValue, setSelectValue] = useState<TransactionMutate>(existingCategory);
+  const [selectValue, setSelectValue] = useState<TransactionMutate>(existingTransaction);
   
   useEffect(() => {
     void dispatch(fetchAllCategories());

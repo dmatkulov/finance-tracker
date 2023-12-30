@@ -37,8 +37,6 @@ export const fetchCategoryPreview = createAsyncThunk<CategoryMutation[], string>
     });
   }
 );
-
-
 export const fetchAllTransactions = createAsyncThunk<Transaction[], Category[]>(
   'transaction/fetchAll',
   async (categories) => {
@@ -66,10 +64,39 @@ export const fetchAllTransactions = createAsyncThunk<Transaction[], Category[]>(
   }
 );
 
+export const fetchOneTransaction = createAsyncThunk<Transaction, string>(
+  'transaction/fetchOne',
+  async (id) => {
+    const response = await axiosApi.get<ApiTransaction | null>('/transactions/' + id + '.json');
+    const transaction = response.data;
+    
+    if (transaction === null) {
+      throw new Error('Item not found');
+    }
+    const oneTransaction: Transaction = {
+      id,
+      ...transaction,
+      type: transaction.amount >= 0 ? 'income' : 'expense',
+    };
+    
+    return oneTransaction;
+  }
+);
+
+interface UpdateContactParams {
+  id: string;
+  transaction: ApiTransaction;
+}
+
+export const updateTransaction = createAsyncThunk<void, UpdateContactParams>(
+  'transaction/update',
+  async ({id, transaction}) => {
+    await axiosApi.put('/transactions/' + id + '.json', transaction);
+  }
+);
+
 export const deleteTransaction = createAsyncThunk<void, string>(
   'transaction/delete',
   async (id) => {
-    await axiosApi.delete('/transactions/' + id + '.json')
-    
-  }
-)
+    await axiosApi.delete('/transactions/' + id + '.json');
+  });
