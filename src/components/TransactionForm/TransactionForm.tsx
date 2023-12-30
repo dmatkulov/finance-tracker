@@ -34,7 +34,7 @@ const TransactionForm: React.FC<Props> = ({onSubmitTransaction, existingTransact
     const {name, value} = event.target;
     setSelectValue(prevState => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
   
