@@ -49,7 +49,7 @@ export const fetchAllTransactions = createAsyncThunk<Transaction[], Category[]>(
       return [];
     }
     
-    const transformedTransactions: Transaction[] = Object.keys(transactions).flatMap((id) => {
+    const filteredTransactions: Transaction[] = Object.keys(transactions).flatMap((id) => {
       const transaction = transactions[id];
       
       return categories
@@ -62,28 +62,7 @@ export const fetchAllTransactions = createAsyncThunk<Transaction[], Category[]>(
           type: category.type,
         }));
     });
-    
-    return transformedTransactions;
-    
-    // const activeTrans: Transaction[] = [];
-    //
-    // const fetchedTransaction = Object.keys(transactions).map((id) => {
-    //   const transaction = transactions[id];
-    //
-    //   const newTransactions = categories.filter((category) => category.id === transaction.category);
-    //
-    //   newTransactions.map((t) => {
-    //     activeTrans.push({
-    //       id,
-    //       amount: transaction.amount,
-    //       createdAt: transaction.createdAt,
-    //       category: t.name,
-    //       type: t.type
-    //     });
-    //   });
-    //
-    // });
-    //
-    // return activeTrans;
+    console.log('transactions in thunk', filteredTransactions);
+    return filteredTransactions;
   }
 );

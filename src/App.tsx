@@ -10,6 +10,7 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Home/>}/>
+          <Route path="/transactions" element={<Home/>}/>
           <Route path="/categories" element={<Categories/>}/>
           <Route path="*" element={<h2>Page not found</h2>}/>
         </Routes>

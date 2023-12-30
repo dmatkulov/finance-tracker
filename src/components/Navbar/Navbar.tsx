@@ -2,6 +2,8 @@ import React from 'react';
 import {Link, NavLink} from 'react-router-dom';
 import {useAppDispatch} from '../../app/hooks';
 import {showAddTransactionModal} from '../../store/transaction/transactionSlice';
+import ModalAddTransaction from '../Modal/ModalAddTransaction';
+import AddTransaction from '../../containers/AddTransaction/AddTransaction';
 
 const Navbar: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -24,8 +26,10 @@ const Navbar: React.FC = () => {
             </button>
           </li>
         </ul>
-      
       </div>
+      <ModalAddTransaction>
+        <AddTransaction/>
+      </ModalAddTransaction>
     </nav>
   );
 };

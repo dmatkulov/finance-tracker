@@ -57,6 +57,8 @@ export const transactionSlice = createSlice({
     builder.addCase(fetchAllTransactions.fulfilled, (state, {payload: transactions}) => {
       state.fetchLoading = false;
       state.transactions = transactions;
+      console.log('transactions in slice', transactions);
+      
     });
     builder.addCase(fetchAllTransactions.rejected, (state) => {
       state.fetchLoading = false;

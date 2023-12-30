@@ -5,6 +5,7 @@ import {selectTransactions} from '../../store/transaction/transactionSlice';
 import {selectCategories} from '../../store/category/categorySlice';
 import {fetchAllTransactions} from '../../store/transaction/transactionThunks';
 
+
 const TransactionList: React.FC = () => {
   const dispatch = useAppDispatch();
   const categories = useAppSelector(selectCategories);
@@ -13,6 +14,8 @@ const TransactionList: React.FC = () => {
   useEffect(() => {
     void dispatch(fetchAllTransactions(categories));
   }, [categories, dispatch]);
+  
+  console.log('transactions in container', transactions);
   
   return (
     <div>
