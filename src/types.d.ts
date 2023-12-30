@@ -26,3 +26,9 @@ export interface Transaction extends ApiTransaction{
 export interface ApiTransactions {
   [id: string]: ApiTransaction;
 }
+
+export interface TransactionMutate {
+  type: '',
+  name: '',
+  amount: string;
+}

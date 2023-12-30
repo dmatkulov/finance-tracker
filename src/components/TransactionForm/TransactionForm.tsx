@@ -2,28 +2,32 @@ import React, {useEffect, useState} from 'react';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {fetchCategoryPreview} from '../../store/transaction/transactionThunks';
 import {selectCategoryPreview} from '../../store/transaction/transactionSlice';
-import {ApiCategory, ApiTransaction} from '../../types';
+import {ApiTransaction, TransactionMutate} from '../../types';
+import {selectCategories} from '../../store/category/categorySlice';
+import {fetchAllCategories} from '../../store/category/categoryThunks';
 
-const initialState: ApiTransaction = {
-  category: '',
-  amount: 0,
-  createdAt: ''
+const initialState: TransactionMutate = {
+  type: '',
+  name: '',
+  amount: ''
 };
 
 interface Props {
-  onSubmit: (category: ApiTransaction) => void;
-  existingCategory?: ApiTransaction;
+  onSubmitTransaction: (category: ApiTransaction) => void;
+  existingCategory?: TransactionMutate;
   isEdit?: boolean;
   isLoading?: boolean;
 }
 
-const TransactionForm: React.FC<Props> = () => {
+const TransactionForm: React.FC<Props> = ({onSubmitTransaction, existingCategory = initialState}) => {
   const dispatch = useAppDispatch();
-  const [selectValue, setSelectValue] = useState<ApiCategory>({
-    type: '',
-    name: ''
-  });
-  const categories = useAppSelector(selectCategoryPreview);
+  const categoryPreviews = useAppSelector(selectCategoryPreview);
+  const categories = useAppSelector(selectCategories);
+  const [selectValue, setSelectValue] = useState<TransactionMutate>(existingCategory);
+  
+  useEffect(() => {
+    void dispatch(fetchAllCategories());
+  }, [dispatch]);
   
   const changeSelect = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const {name, value} = event.target;
@@ -37,8 +41,29 @@ const TransactionForm: React.FC<Props> = () => {
     selectValue.type.length > 0 && void dispatch(fetchCategoryPreview(selectValue.type));
   }, [dispatch, selectValue]);
   
+  const onFormSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    
+    const selectedCategory = categories.find(
+      (category) => category.name === selectValue.name && category.type === selectValue.type
+    );
+    
+    if (selectedCategory) {
+      const newTransaction: ApiTransaction = {
+        category: selectedCategory.id,
+        amount: +selectValue.amount,
+        createdAt: new Date().toString(),
+      };
+      
+      onSubmitTransaction({
+        ...newTransaction
+      });
+    }
+  };
+  
+  
   return (
-    <form>
+    <form onSubmit={onFormSubmit}>
       <h4 className="mb-3">
         Create new Transaction
       </h4>
@@ -68,14 +93,30 @@ const TransactionForm: React.FC<Props> = () => {
           onChange={changeSelect}
         >
           <option disabled value="">Select a category</option>
-          {categories.length > 0 ? (
-            categories.map((category) => (
+          {categoryPreviews.length > 0 ? (
+            categoryPreviews.map((category) => (
               <option key={category.id} value={category.name}>
                 {category.name}
               </option>
             ))
           ) : null}
         </select>
+      </div>
+      <div className="form-group mb-3">
+        <label htmlFor="amount" className="text-secondary mb-2">Amount</label>
+        <div className="input-group mb-3">
+          <span className="input-group-text">KGS</span>
+          <input type="number"
+                 name="amount"
+                 id="amount"
+                 required
+                 className="form-control"
+                 value={selectValue.amount}
+                 onChange={changeSelect}
+          />
+          <span className="input-group-text">.00</span>
+        </div>
+      
       </div>
       <button
         type="submit"

@@ -1,6 +1,13 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import axiosApi from '../../axiosApi';
-import {ApiCategories, Category, CategoryMutation} from '../../types';
+import {ApiCategories, ApiTransaction, Category, CategoryMutation} from '../../types';
+
+export const createTransaction = createAsyncThunk<void, ApiTransaction>(
+  'transaction/create',
+  async (transaction) => {
+    await axiosApi.post('/transactions.json', transaction);
+  }
+);
 
 export const fetchCategoryPreview = createAsyncThunk<CategoryMutation[], string>(
   'transaction/fetchCategoryId',
