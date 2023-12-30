@@ -14,7 +14,8 @@ interface Props {
   isLoading?: boolean;
 }
 
-const CategoryForm: React.FC<Props> = ({onSubmitCategory, existingCategory = initialState, isEdit, isLoading}) => {
+const CategoryForm: React.FC<Props> = ({onSubmitCategory, existingCategory = initialState, isEdit = <form
+  action=""></form>, isLoading= false}) => {
   const [category, setCategory] = useState<ApiCategory>(existingCategory);
   
   const changeCategory = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {

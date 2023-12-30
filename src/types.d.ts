@@ -18,7 +18,7 @@ export interface ApiTransaction {
   createdAt: string;
 }
 
-export interface Transaction extends ApiCategory{
+export interface Transaction extends ApiTransaction{
   id: string;
   amount: number;
 }

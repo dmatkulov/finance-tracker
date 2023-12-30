@@ -26,6 +26,7 @@ export const transactionSlice = createSlice({
     builder.addCase(fetchCategoryPreview.fulfilled, (state, {payload: categories}) => {
       state.fetchPreviewLoading = false;
       state.categoryPreview = categories;
+      console.log(state.categoryPreview);
     });
     builder.addCase(fetchCategoryPreview.rejected, (state) => {
       state.fetchPreviewLoading = false;
