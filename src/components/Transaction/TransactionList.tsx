@@ -1,28 +1,55 @@
 import React, {useEffect} from 'react';
 import TransactionItem from './TransactionItem';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {selectTransactions} from '../../store/transaction/transactionSlice';
+import {selectDeleteTransaction, selectTransactions} from '../../store/transaction/transactionSlice';
 import {selectCategories} from '../../store/category/categorySlice';
-import {fetchAllTransactions} from '../../store/transaction/transactionThunks';
+import {deleteTransaction, fetchAllTransactions} from '../../store/transaction/transactionThunks';
 
 
 const TransactionList: React.FC = () => {
   const dispatch = useAppDispatch();
   const categories = useAppSelector(selectCategories);
   const transactions = useAppSelector(selectTransactions);
+  const deleteLoading = useAppSelector(selectDeleteTransaction);
   
   useEffect(() => {
-    void dispatch(fetchAllTransactions(categories));
+    if (categories.length > 0) {
+      void dispatch(fetchAllTransactions(categories));
+    }
   }, [categories, dispatch]);
   
-  console.log('transactions in container', transactions);
+  const onDeleteTransaction = async (id: string) => {
+    if (window.confirm('Do you want to delete category')) {
+      await dispatch(deleteTransaction(id));
+    }
+    await dispatch(fetchAllTransactions(categories));
+  };
+  
+  const sortedTransactions = [...transactions].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+  
+  let total = transactions.reduce((acc, transaction) => {
+    if (transaction.type === 'income') {
+      return acc + transaction.amount;
+    } else {
+      return acc - transaction.amount;
+    }
+  }, 0);
+  
   
   return (
     <div>
-      {transactions.map((transaction) => (
+      {total > 0 && (
+        <h4 className="px-3 py-2 mb-5 bg-body-secondary rounded-3">Total: {total} KGS</h4>
+      )}
+      
+      {sortedTransactions.map((transaction) => (
         <TransactionItem
           key={transaction.id}
           transaction={transaction}
+          deleteLoading={deleteLoading}
+          onDelete={() => onDeleteTransaction(transaction.id)}
         />
       ))}
     </div>

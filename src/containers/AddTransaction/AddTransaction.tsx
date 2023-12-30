@@ -1,22 +1,27 @@
 import React from 'react';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {selectCreateTransactionLoading} from '../../store/transaction/transactionSlice';
+import {selectCreateTransactionLoading, showAddTransactionModal} from '../../store/transaction/transactionSlice';
 import {ApiTransaction} from '../../types';
-import {createTransaction} from '../../store/transaction/transactionThunks';
+import {createTransaction, fetchAllTransactions} from '../../store/transaction/transactionThunks';
 import TransactionForm from '../../components/TransactionForm/TransactionForm';
+import {selectCategories} from '../../store/category/categorySlice';
 
 const AddTransaction: React.FC = () => {
   const dispatch = useAppDispatch();
   const createLoading = useAppSelector(selectCreateTransactionLoading);
+  const categories = useAppSelector(selectCategories);
   
-  const onSubmit = async (transaction: ApiTransaction)=> {
+  const onSubmit = async (transaction: ApiTransaction) => {
     await dispatch(createTransaction(transaction));
-    console.log('created');
+    void dispatch(fetchAllTransactions(categories));
+    dispatch(showAddTransactionModal(false));
   };
   
   return (
     <div>
-      <TransactionForm onSubmitTransaction={onSubmit} isLoading={createLoading}/>
+      <TransactionForm
+        onSubmitTransaction={onSubmit}
+        isLoading={createLoading}/>
     </div>
   );
 };

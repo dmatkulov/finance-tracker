@@ -1,6 +1,6 @@
 import {CategoryMutation, Transaction} from '../../types';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {createTransaction, fetchAllTransactions, fetchCategoryPreview} from './transactionThunks';
+import {createTransaction, deleteTransaction, fetchAllTransactions, fetchCategoryPreview} from './transactionThunks';
 import {RootState} from '../../app/store';
 
 interface TransactionState {
@@ -9,6 +9,7 @@ interface TransactionState {
   createLoading: boolean;
   fetchLoading: boolean;
   fetchPreviewLoading: boolean;
+  deleteLoading: false | string;
   showAddTransactionModal: boolean;
 }
 
@@ -18,6 +19,7 @@ const initialState: TransactionState = {
   createLoading: false,
   fetchLoading: false,
   fetchPreviewLoading: false,
+  deleteLoading: false,
   showAddTransactionModal: false,
 };
 
@@ -57,12 +59,20 @@ export const transactionSlice = createSlice({
     builder.addCase(fetchAllTransactions.fulfilled, (state, {payload: transactions}) => {
       state.fetchLoading = false;
       state.transactions = transactions;
-      console.log('transactions in slice', transactions);
-      
     });
     builder.addCase(fetchAllTransactions.rejected, (state) => {
       state.fetchLoading = false;
     });
+    
+    builder.addCase(deleteTransaction.pending, (state, {meta}) => {
+      state.deleteLoading = meta.arg;
+    });
+    builder.addCase(deleteTransaction.fulfilled, (state) => {
+      state.deleteLoading = false;
+    })
+    builder.addCase(deleteTransaction.rejected, (state) => {
+      state.deleteLoading = false;
+    })
   }
 });
 
@@ -80,3 +90,4 @@ export const selectFetchTransactionsLoading = (state: RootState) => state.transa
 export const selectPreviewLoading = (state: RootState) => state.transaction.fetchPreviewLoading;
 export const selectCreateTransactionLoading = (state: RootState) => state.transaction.createLoading;
 export const selectShowTransaction = (state: RootState) => state.transaction.showAddTransactionModal;
+export const selectDeleteTransaction = (state: RootState) => state.transaction.deleteLoading;

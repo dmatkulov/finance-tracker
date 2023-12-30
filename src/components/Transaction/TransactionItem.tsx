@@ -1,12 +1,15 @@
 import React from 'react';
 import {Transaction} from '../../types';
 import dayjs from 'dayjs';
+import ButtonSpinner from '../Spinner/ButtonSpinner';
 
 interface Props {
   transaction: Transaction;
+  deleteLoading: boolean | string;
+  onDelete: React.MouseEventHandler;
 }
 
-const TransactionItem: React.FC<Props> = ({transaction}) => {
+const TransactionItem: React.FC<Props> = ({transaction, deleteLoading, onDelete}) => {
   const createdAt = transaction.createdAt;
   
   const amountStyle = ['fw-bold'];
@@ -43,8 +46,10 @@ const TransactionItem: React.FC<Props> = ({transaction}) => {
           </button>
           <button
             className="btn btn-danger d-flex align-items-center justify-content-center p-3"
-          
+            disabled={deleteLoading ? deleteLoading === transaction.id : false}
+            onClick={onDelete}
           >
+            {deleteLoading && deleteLoading === transaction.id && <ButtonSpinner/>}
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  className="bi bi-trash3-fill" viewBox="0 0 16 16">
               <path

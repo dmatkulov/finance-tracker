@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import CategoryItem from './CategoryItem';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {
@@ -18,10 +18,6 @@ const CategoryList: React.FC = () => {
   const oneCategory = useAppSelector(selectCategory);
   const loading = useAppSelector(selectFetchLoading);
   const deleteLoading = useAppSelector(selectDeleteLoading);
-  
-  useEffect(() => {
-    void dispatch(fetchAllCategories());
-  }, [dispatch]);
   
   const onDeleteCategory = async (id: string) => {
     if (window.confirm('Do you want to delete category')) {
